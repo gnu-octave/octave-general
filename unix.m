@@ -1,32 +1,28 @@
-## Copyright (C) 2001 Laurent Mazet
+## unix ('cmd')
+##    Execute a system command if running under Unix.  Do nothing if running
+##    under a different operating system.  The command output will be echoed
+##    to the console.
 ##
-## This program is free software; you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published by
-## the Free Software Foundation; either version 2 of the License, or
-## (at your option) any later version.
+## [status, text] = unix ('cmd', '-echo')
+##    Capture the output and exit status of a command.  The command output
+##    will not be echoed unless '-echo' is specified.
 ##
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
+## [status, text] = unix ('cmd 2>&1')
+##    Captures stderr as well as stdout.
 ##
-## You should have received a copy of the GNU General Public License
-## along with this program; if not, write to the Free Software
-## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+## unix ('cmd &')
+##    Runs cmd in the background, returning immediately to Octave.
 
-## function [status, result] = unix (command)
-##
-## Execute unix command and return status and standard output.
-##
-## command: command string
-##
-## status: command's status
-## result: standard ouput.
+## This program is granted to the public domain.
 
-## Jan 31, 2001 LSM
+function [status, text] = unix (cmd, echo) 
 
-function [status, result] = unix (command)
-
-  [result, status] = system (command);
+  if (nargin < 1 || nargin > 2)
+    usage ( "[status, text] = unix (cmd, '-echo')");
+  else
+    [text, status] = system (cmd);
+    if (nargin > 1 || nargout == 0) disp (text); endif
+  endif
 
 endfunction
+
