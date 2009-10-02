@@ -19,7 +19,7 @@
 ## This replaces the missing functionality of "lookup" if on Octave 3.2.
 
 function lookup_func = __lookup_compat__ ()
-  persistent octave32 = issorted ({version, "3.3.x"});
+  persistent octave32 = issorted ({"3.0.0", version, "3.3.0"});
   if (octave32)
     lookup_func = @__my_lookup__;
   else
