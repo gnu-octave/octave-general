@@ -77,7 +77,6 @@ endfunction
 %! clf
 %! plot(t,he2,'bo;Contour integral representation;', t,he2_,'r;Exact;');
 %! grid
-%! clear all
 %!
 %! % --------------------------------------------------------------------------
 %! % The plots compares the approximation of the Hermite polynomial using the
