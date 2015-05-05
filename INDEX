@@ -7,14 +7,6 @@ Dictionaries
  @dict/join
  @dict/length
  @dict/struct
-Input check
- @inputParser/addOptional
- @inputParser/addRequired
- @inputParser/addParamValue
- @inputParser/addSwitch
- @inputParser/createCopy
- @inputParser/inputParser
- @inputParser/parse
 Various Functions
  adresamp2
  majle

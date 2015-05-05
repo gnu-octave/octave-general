@@ -1,8 +1,7 @@
-Summary of important user-visible changes for general 1.x.x:
+Summary of important user-visible changes for general 2.0.0:
 -------------------------------------------------------------------
 
- ** Package is now dependent on Octave version 3.8.0 or later.
-    This dependency was already required for version 1.3.4.
+ ** Package is now dependent on Octave version 4.0.0 or later.
 
  ** The @inputParser has been removed since it is now part of
     Octave core and has a completely Matlab compatible syntax.
