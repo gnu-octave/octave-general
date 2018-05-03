@@ -1,4 +1,5 @@
 // Copyright (C) 2009 VZLU Prague
+// Copyright (C) 2018 John Donoghue <john.donogue@ieee.org>
 //
 // This program is free software; you can redistribute it and/or modify it under
 // the terms of the GNU General Public License as published by the Free Software
@@ -15,10 +16,19 @@
 
 #include <octave/oct.h>
 #include <octave/utils.h>
+#include <octave/interpreter.h>
 #include <octave/symtab.h>
 #include <octave/oct-map.h>
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#ifdef DEFMETHOD_DLD
+DEFMETHOD_DLD (packfields, interp, args, ,
+#else
 DEFUN_DLD (unpackfields, args, ,
+#endif
   "-*- texinfo -*-\n\
 @deftypefn {Loadable Function} {} unpackfields (@var{s_name}, @var{fld1}, @var{fld2}, @dots{})\n\
 Create variables from fields of a struct.\n\
@@ -50,6 +60,11 @@ but more efficient and more concise.\n\
 
   if (nargin > 0)
     {
+#ifdef DEFMETHOD_DLD
+      octave::symbol_table::scope curr_scope
+       = interp.require_current_scope ("unpackfields");
+#endif
+
       std::string struct_name = args (0).string_value ();
       string_vector fld_names(nargin-1);
 
@@ -75,9 +90,12 @@ but more efficient and more concise.\n\
       if (! error_state)
         {
           // Force the symbol to be inserted in caller's scope.
+#ifdef DEFMETHOD_DLD
+          octave_value struct_val = curr_scope.varval (struct_name);
+#else
           octave_value struct_val = symbol_table::varval (struct_name);
-
-          if (struct_val.is_map ())
+#endif
+          if (struct_val.OV_ISMAP ())
             {
               // Fast code for a built-in struct.
               const octave_scalar_map map = struct_val.scalar_map_value ();
@@ -89,7 +107,11 @@ but more efficient and more concise.\n\
                     {
                       octave_scalar_map::const_iterator iter = map.seek (fld_names(i));
                       if (iter != map.end ())
+#ifdef DEFMETHOD_DLD
+                        curr_scope.assign (fld_names(i), map.contents (iter));
+#else
                         symbol_table::assign (fld_names(i), map.contents (iter));
+#endif
                       else
                         {
                           error ("unpackfields: field %s does not exist", fld_names(i).c_str ());
@@ -114,7 +136,11 @@ but more efficient and more concise.\n\
                     break;
 
                   if (val.is_defined ())
+#ifdef DEFMETHOD_DLD
+                    curr_scope.assign (fld_names(i), val);
+#else
                     symbol_table::assign (fld_names(i), val);
+#endif
                 }
             }
         }

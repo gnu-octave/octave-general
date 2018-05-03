@@ -1,4 +1,5 @@
 // Copyright (C) 2009 VZLU Prague
+// Copyright (C) 2018 John Donoghue <john.donogue@ieee.org>
 //
 // This program is free software; you can redistribute it and/or modify it under
 // the terms of the GNU General Public License as published by the Free Software
@@ -15,10 +16,19 @@
 
 #include <octave/oct.h>
 #include <octave/utils.h>
+#include <octave/interpreter.h>
 #include <octave/symtab.h>
 #include <octave/oct-map.h>
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#ifdef DEFMETHOD_DLD
+DEFMETHOD_DLD (packfields, interp, args, ,
+#else
 DEFUN_DLD (packfields, args, ,
+#endif
   "-*- texinfo -*-\n\
 @deftypefn {Loadable Function} {} packfields (@var{s_name}, @var{var1}, @var{var2}, @dots{})\n\
 Create struct from variables.\n\
@@ -44,6 +54,11 @@ but more efficient and more concise.\n\
 
   if (nargin > 0)
     {
+#ifdef DEFMETHOD_DLD
+      octave::symbol_table::scope curr_scope
+       = interp.require_current_scope ("packfields");
+#endif
+
       std::string struct_name = args (0).string_value ();
       string_vector fld_names(nargin-1);
       octave_value_list fld_vals(nargin-1);
@@ -64,7 +79,12 @@ but more efficient and more concise.\n\
           if (valid_identifier (fld_name))
             {
               fld_names(i) = fld_name;
+
+#ifdef DEFMETHOD_DLD
+              octave_value fld_val = curr_scope.varval (fld_name);
+#else
               octave_value fld_val = symbol_table::varval (fld_name);
+#endif
               if (fld_val.is_defined ())
                 fld_vals(i) = fld_val;
               else
@@ -76,46 +96,27 @@ but more efficient and more concise.\n\
 
       if (! error_state)
         {
-          // Force the symbol to be inserted in caller's scope.
-          symbol_table::symbol_record& rec = symbol_table::insert (struct_name);
+#ifdef DEFMETHOD_DLD
+          octave_value struct_val = curr_scope.varval (struct_name);
+#else
+          octave_value struct_val = symbol_table::varval (struct_name);
+#endif
 
-          octave_value& struct_ref = rec.varref ();
+          octave_scalar_map map;
 
-          // If not defined, use struct ().
-          if (! struct_ref.is_defined ())
-            struct_ref = octave_scalar_map ();
+          if (struct_val.is_defined () && struct_val.OV_ISMAP ())
+            map = struct_val.scalar_map_value ();
 
-          if (struct_ref.is_map ())
-            {
-              // Fast code for a built-in struct.
-              octave_scalar_map map = struct_ref.scalar_map_value ();
+          for (octave_idx_type i = 0; i < nargin-1; i++)
+            map.assign (fld_names(i), fld_vals(i));
 
-              if (! error_state)
-                {
-                  // Do the actual work.
-                  struct_ref = octave_value (); // Unshare map.
-                  for (octave_idx_type i = 0; i < nargin-1; i++)
-                    map.assign (fld_names(i), fld_vals(i));
-                  struct_ref = map;
-                }
-              else
-                error ("packfields: structure must have singleton dimensions");
-            }
-          else
-            {
-              // General case.
-              struct_ref.make_unique ();
-              std::list<octave_value_list> idx (1);
+          struct_val = map;
 
-              for (octave_idx_type i = 0; i < nargin-1; i++)
-                {
-                  idx.front () = args(i+1); // Save one string->octave_value conversion.
-                  struct_ref = struct_ref.subsasgn (".", idx, fld_vals (i));
-
-                  if (error_state)
-                    break;
-                }
-            }
+#ifdef DEFMETHOD_DLD
+          curr_scope.assign (struct_name, struct_val);
+#else
+          symbol_table::assign (struct_name, struct_val);
+#endif
         }
     }
   else

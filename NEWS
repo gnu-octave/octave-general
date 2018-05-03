@@ -1,3 +1,11 @@
+Summary of important user-visible changes for general 2.0.1:
+-------------------------------------------------------------------
+
+ ** added configure script to detect function names for various
+    octave versions.
+
+ ** updated depreciated functions for octave 4.4
+
 Summary of important user-visible changes for general 2.0.0:
 -------------------------------------------------------------------
 

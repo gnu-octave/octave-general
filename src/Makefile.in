@@ -1,3 +1,8 @@
+MKOCTFILE := @MKOCTFILE@
+CXXFLAGS  := @CXXFLAGS@ @DEFS@
+LIBS      := @LIBS@
+LDFLAGS   := @LDFLAGS@
+
 ifndef MKOCTFILE
 MKOCTFILE := mkoctfile -Wall
 endif
@@ -7,7 +12,7 @@ PROGS = $(patsubst %.cc,%.oct,$(wildcard *.cc))
 all: $(PROGS)
 
 %.oct: %.cc
-	$(MKOCTFILE) $<
+	$(MKOCTFILE) $< $(CXXFLAGS) $(LDFLAGS) $(LIBS)
 
 clean:
 	rm -f *.o octave-core core *.oct *~

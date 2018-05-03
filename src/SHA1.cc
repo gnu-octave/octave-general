@@ -1,4 +1,5 @@
 // Copyright (C) 1999 Andy Adler <adler@sce.carleton.ca>
+// Copyright (C) 2018 John Donoghue <john.donogue@ieee.org>
 //
 // This program is free software; you can redistribute it and/or modify it under
 // the terms of the GNU General Public License as published by the Free Software
@@ -17,6 +18,10 @@
 // marked as such.
 
 #include <octave/oct.h>
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 /*
  * defines for SHA1.c code
@@ -60,12 +65,12 @@ HMAC= SHA1( [ passcode, SHA1( [passcode, data ] ) ); ")
    hash_context c;
 
    if (nargin >2 || nargin ==0) {
-      usage("SHA1");
+      print_usage();
       return retval;
    }
    else if (nargin ==2 ){
       ColumnVector init( args(1).vector_value() );
-      if (init.length() != 20) 
+      if (init.numel() != 20) 
          error("hash initializer must have 20 bytes");
 
       for( int i=0,k=0; i<5; i++) {
@@ -81,7 +86,7 @@ HMAC= SHA1( [ passcode, SHA1( [passcode, data ] ) ); ")
    }
  
    ColumnVector data( args(0).vector_value() );
-   int len=data.length();
+   int len=data.numel();
 
    for( int i=0; i< len; i++) {
       unsigned char d= (unsigned char) data(i);
