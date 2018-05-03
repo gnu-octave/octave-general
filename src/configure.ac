@@ -42,6 +42,8 @@ if test -z "$ac_cv_prog_AWK"; then
 AC_MSG_ERROR([AWK not found], 1);
 fi
 
+AC_PROG_GREP
+
 # The same value of CXX as Octave was compiled with is supposed to be used.
 CXX=${CXX:-`${MKOCTFILE} -p CXX`}
 AC_PROG_CXX

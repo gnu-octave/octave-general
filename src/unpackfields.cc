@@ -25,7 +25,7 @@
 #endif
 
 #ifdef DEFMETHOD_DLD
-DEFMETHOD_DLD (packfields, interp, args, ,
+DEFMETHOD_DLD (unpackfields, interp, args, ,
 #else
 DEFUN_DLD (unpackfields, args, ,
 #endif

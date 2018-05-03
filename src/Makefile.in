@@ -2,17 +2,32 @@ MKOCTFILE := @MKOCTFILE@
 CXXFLAGS  := @CXXFLAGS@ @DEFS@
 LIBS      := @LIBS@
 LDFLAGS   := @LDFLAGS@
+GREP      := @GREP@
 
 ifndef MKOCTFILE
 MKOCTFILE := mkoctfile -Wall
 endif
 
 PROGS = $(patsubst %.cc,%.oct,$(wildcard *.cc))
+TST_DIR    := ../inst/test
+CC_SOURCES  := $(wildcard *.cc)
+CC_TST_SOURCES := $(shell $(GREP) --files-with-matches '^%!' $(CC_SOURCES))
+TST_SOURCES := $(patsubst %.cc,${TST_DIR}/%.cc-tst,$(CC_TST_SOURCES))
 
-all: $(PROGS)
+
+all: $(PROGS) $(TST_SOURCES)
 
 %.oct: %.cc
 	$(MKOCTFILE) $< $(CXXFLAGS) $(LDFLAGS) $(LIBS)
+
+$(TST_DIR):
+	@mkdir -p "$@"
+
+$(TST_SOURCES): $(TST_DIR)/%.cc-tst: %.cc | $(TST_DIR)
+	@echo "Extracting tests from $< ..."
+	@$(RM) -f "$@" "$@-t"
+	@(      echo "## Generated from $<"; \
+	$(GREP) '^%!' "$<") > "$@"
 
 clean:
 	rm -f *.o octave-core core *.oct *~

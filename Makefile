@@ -212,7 +212,7 @@ doctest: $(install_stamp)
 
 ## Test package.
 octave_test_commands = \
-' dirs = {"inst", "src"}; \
+' pkgs = pkg("list","general"); cd (pkgs{1}.dir); dirs = { "." }; \
   dirs(cellfun (@ (x) ! isdir (x), dirs)) = []; \
   if (isempty (dirs)) error ("no \"inst\" or \"src\" directory"); exit (1); \
     else __run_test_suite__ (dirs, {}); endif '
@@ -232,7 +232,8 @@ check: $(install_stamp)
 
 clean: clean-tarballs clean-unpacked-release clean-install
 	@echo "## Removing target directory (if empty)..."
-	-rmdir $(target_dir)
+	test -e $(target_dir) && rmdir $(target_dir) || true
+	test -e inst/test && rm -rf inst/test || true
 	@echo
 	@echo "## Cleaning done"
 	@echo
