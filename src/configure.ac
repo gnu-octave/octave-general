@@ -51,6 +51,10 @@ AC_PROG_CXX
 AC_PROG_CXXCPP
 
 # Checks for libraries.
+PKG_CHECK_MODULES([NETTLE],[nettle],
+ [AC_DEFINE([HAVE_NETTLE],[1], [Have nettle])],
+ [AC_MSG_WARN([Nettle not found, SHA1 disabled])]
+)
 
 # Checks for typedefs, structures, and compiler characteristics.
 

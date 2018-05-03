@@ -3,6 +3,8 @@ CXXFLAGS  := @CXXFLAGS@ @DEFS@
 LIBS      := @LIBS@
 LDFLAGS   := @LDFLAGS@
 GREP      := @GREP@
+NETTLE_CFLAGS := @NETTLE_CFLAGS@
+NETTLE_LIBS := @NETTLE_LIBS@
 
 ifndef MKOCTFILE
 MKOCTFILE := mkoctfile -Wall
@@ -17,6 +19,8 @@ TST_SOURCES := $(patsubst %.cc,${TST_DIR}/%.cc-tst,$(CC_TST_SOURCES))
 
 all: $(PROGS) $(TST_SOURCES)
 
+SHA1.oct: SHA1.cc
+	$(MKOCTFILE) $< $(CXXFLAGS) $(NETTLE_CFLAGS) $(LDFLAGS) $(LIBS) $(NETTLE_LIBS)
 %.oct: %.cc
 	$(MKOCTFILE) $< $(CXXFLAGS) $(LDFLAGS) $(LIBS)
 
