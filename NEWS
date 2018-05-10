@@ -6,6 +6,10 @@ Summary of important user-visible changes for general 2.0.1:
 
  ** updated depreciated functions for octave 4.4
 
+ ** SHA1 uses nettle library as its underlying implementatiom
+
+ ** package installs BIST .cc tests
+
 Summary of important user-visible changes for general 2.0.0:
 -------------------------------------------------------------------
 

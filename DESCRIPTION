@@ -6,5 +6,6 @@ Maintainer: Octave-Forge community <maintainers@octave.org>
 Title: General
 Description: General tools for Octave.
 Depends: octave (>= 4.0.0)
+BuildRequire: nettle-devel
 License: GPLv3+, modified BSD, public domain
 Url: http://octave.sf.net
