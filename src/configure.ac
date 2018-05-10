@@ -93,6 +93,12 @@ OF_OCTAVE_LIST_ALT_SYMS([
 ],
    [oct-alt-includes.h])
 
+AC_CHECK_HEADERS([octave/interpreter.h],
+  [],
+  [],
+  [#include <octave/oct.h>]
+)
+
 LIBS=$TLIBS
 LDFLAGS=$TLDFLAGS
 CXXFLAGS=$TCXXFLAGS
