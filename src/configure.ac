@@ -18,7 +18,7 @@
 ### <http://www.gnu.org/licenses/>.
 
 AC_PREREQ([2.67])
-AC_INIT([general], [2.0.1])
+AC_INIT([general], [2.1.0])
 AC_CONFIG_SRCDIR([packfields.cc])
 AC_CONFIG_HEADERS([config.h])
 
