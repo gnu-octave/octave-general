@@ -66,7 +66,7 @@ but more efficient and more concise.\n\
       string_vector fld_names(nargin-1);
       octave_value_list fld_vals(nargin-1);
 
-      if (! error_state && ! valid_identifier (struct_name))
+      if (! error_state && ! OCTAVE__VALID_IDENTIFIER (struct_name))
         error ("packfields: invalid variable name: %s", struct_name.c_str ());
 
       for (octave_idx_type i = 0; i < nargin-1; i++)
@@ -79,7 +79,7 @@ but more efficient and more concise.\n\
           if (error_state)
             break;
 
-          if (valid_identifier (fld_name))
+          if (OCTAVE__VALID_IDENTIFIER (fld_name))
             {
               fld_names(i) = fld_name;
 

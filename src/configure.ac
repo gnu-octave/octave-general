@@ -82,6 +82,15 @@ CPPFLAGS="$OCTINCLUDEDIR $CPPFLAGS"
 OF_OCTAVE_LIST_ALT_SYMS([
 
 [dnl
+  [valid_identifier],
+  [octave::valid_identifier],
+  [[octave::valid_identifier ("");]],
+  [OCTAVE__VALID_IDENTIFIER],
+  [],
+  []
+],
+
+[dnl
   [is_map],
   [isstruct],
   [[octave_value ().isstruct ();]],
