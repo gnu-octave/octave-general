@@ -212,10 +212,8 @@ doctest: $(install_stamp)
 
 ## Test package.
 octave_test_commands = \
-' pkgs = pkg("list","general"); cd (pkgs{1}.dir); dirs = { "." }; \
-  dirs(cellfun (@ (x) ! isdir (x), dirs)) = []; \
-  if (isempty (dirs)) error ("no \"inst\" or \"src\" directory"); exit (1); \
-    else __run_test_suite__ (dirs, {}); endif '
+' pkgs = pkg("list","general"); dirs = { pkgs{1}.dir }; \
+  __run_test_suite__ (dirs, {}); '
 ## the following works, too, but provides no overall summary output as
 ## __run_test_suite__ does:
 ##
