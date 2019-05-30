@@ -108,6 +108,20 @@ AC_CHECK_HEADERS([octave/interpreter.h],
   [#include <octave/oct.h>]
 )
 
+OF_OCTAVE_CHECK_SYM(
+  [interpreter::varval],
+  [[octave::interpreter *interp; interp->varval ("varname");]],
+  [OCTAVE_HAVE_INTERPRETER_VARVAL],
+  [[#include <octave/interpreter.h>]]
+)
+
+OF_OCTAVE_CHECK_SYM(
+  [interpreter::assign],
+  [[octave::interpreter *interp; interp->assign ("varname", octave_value ());]],
+  [OCTAVE_HAVE_INTERPRETER_ASSIGN],
+  [[#include <octave/interpreter.h>]]
+)
+
 LIBS=$TLIBS
 LDFLAGS=$TLDFLAGS
 CXXFLAGS=$TCXXFLAGS

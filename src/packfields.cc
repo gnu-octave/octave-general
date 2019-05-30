@@ -58,8 +58,10 @@ but more efficient and more concise.\n\
   if (nargin > 0)
     {
 #ifdef DEFMETHOD_DLD
+#ifndef OCTAVE_HAVE_INTERPRETER_VARVAL
       octave::symbol_table::scope curr_scope
        = interp.require_current_scope ("packfields");
+#endif
 #endif
 
       std::string struct_name = args (0).string_value ();
@@ -84,7 +86,11 @@ but more efficient and more concise.\n\
               fld_names(i) = fld_name;
 
 #ifdef DEFMETHOD_DLD
+#ifdef OCTAVE_HAVE_INTERPRETER_VARVAL
+              octave_value fld_val = interp.varval (fld_name);
+#else
               octave_value fld_val = curr_scope.varval (fld_name);
+#endif
 #else
               octave_value fld_val = symbol_table::varval (fld_name);
 #endif
@@ -100,11 +106,14 @@ but more efficient and more concise.\n\
       if (! error_state)
         {
 #ifdef DEFMETHOD_DLD
+#ifdef OCTAVE_HAVE_INTERPRETER_VARVAL
+          octave_value struct_val = interp.varval (struct_name);
+#else
           octave_value struct_val = curr_scope.varval (struct_name);
+#endif
 #else
           octave_value struct_val = symbol_table::varval (struct_name);
 #endif
-
           octave_scalar_map map;
 
           if (struct_val.is_defined () && struct_val.OV_ISMAP ())
@@ -116,7 +125,11 @@ but more efficient and more concise.\n\
           struct_val = map;
 
 #ifdef DEFMETHOD_DLD
+#ifdef OCTAVE_HAVE_INTERPRETER_ASSIGN
+          interp.assign (struct_name, struct_val);
+#else
           curr_scope.assign (struct_name, struct_val);
+#endif
 #else
           symbol_table::assign (struct_name, struct_val);
 #endif
