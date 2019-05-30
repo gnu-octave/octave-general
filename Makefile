@@ -2,7 +2,7 @@
 ## Copyright 2015-2016 Oliver Heimlich
 ## Copyright 2017 Julien Bect <jbect@users.sf.net>
 ## Copyright 2017 Olaf Till <i7tiol@t-online.de>
-## Copyright 2018 John Donoghue <john.donogue@ieee.org>
+## Copyright 2018-2019 John Donoghue <john.donogue@ieee.org>
 ##
 ## Copying and distribution of this file, with or without modification,
 ## are permitted in any medium without royalty provided the copyright
@@ -52,11 +52,18 @@ FIX_PERMISSIONS ?= chmod -R a+rX,u+w,go-w,ug-s
 vcs := $(if $(wildcard .hg),hg,$(if $(wildcard .git),git,unknown))
 ifeq ($(vcs),hg)
 release_dir_dep := .hg/dirstate
+HG           := hg
+HG_CMD        = $(HG) --config alias.$(1)=$(1) --config defaults.$(1)= $(1)
+HG_ID        := $(shell $(call HG_CMD,identify) --id | sed -e 's/+//' )
+REPO_TIMESTAMP := $(firstword $(shell $(call HG_CMD,log) --rev $(HG_ID) --template '{date|hgdate}'))
 endif
 ifeq ($(vcs),git)
 release_dir_dep := .git/index
+REPO_TIMESTAMP := $(firstword $(shell $(GIT) log -n1 --date=unix --format="%ad"))
 endif
 
+TAR_REPRODUCIBLE_OPTIONS := --sort=name --mtime="@$(REPO_TIMESTAMP)" --owner=0 --group=0 --numeric-owner
+TAR_OPTIONS  := --format=ustar $(TAR_REPRODUCIBLE_OPTIONS)
 
 ## .PHONY indicates targets that are not filenames
 ## (https://www.gnu.org/software/make/manual/html_node/Phony-Targets.html)
@@ -95,7 +102,7 @@ html: $(html_tarball)
 
 ## An implicit rule with a recipe to build the tarballs correctly.
 %.tar.gz: %
-	$(TAR) -c -f - --posix -C "$(target_dir)/" "$(notdir $<)" | gzip -9n > "$@"
+	$(TAR) -cf - $(TAR_OPTIONS) -C "$(target_dir)/" "$(notdir $<)" | gzip -9n > "$@"
 
 clean-tarballs:
 	@echo "## Cleaning release tarballs (package + html)..."
