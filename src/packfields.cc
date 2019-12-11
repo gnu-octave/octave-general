@@ -63,23 +63,30 @@ but more efficient and more concise.\n\
        = interp.require_current_scope ("packfields");
 #endif
 #endif
-
+      if (! args (0).is_string ())
+        {
+            error ("packfields: expected variable name");
+	    return octave_value ();
+        }
       std::string struct_name = args (0).string_value ();
       string_vector fld_names(nargin-1);
       octave_value_list fld_vals(nargin-1);
 
-      if (! error_state && ! OCTAVE__VALID_IDENTIFIER (struct_name))
-        error ("packfields: invalid variable name: %s", struct_name.c_str ());
-
+      if (! OCTAVE__VALID_IDENTIFIER (struct_name))
+        {
+          error ("packfields: invalid variable name: %s",
+                 struct_name.c_str ());
+          return octave_value ();
+        }
       for (octave_idx_type i = 0; i < nargin-1; i++)
         {
-          if (error_state)
-            break;
+          if (! args (i+1).is_string ())
+            {
+              error ("packfields: expected variable name for input %d", (int)i+1);
+	      return octave_value ();
+            }
 
           std::string fld_name = args(i+1).string_value ();
-
-          if (error_state)
-            break;
 
           if (OCTAVE__VALID_IDENTIFIER (fld_name))
             {
@@ -97,43 +104,46 @@ but more efficient and more concise.\n\
               if (fld_val.is_defined ())
                 fld_vals(i) = fld_val;
               else
-                error ("packfields: variable %s not defined", fld_name.c_str ());
+               {
+                  error ("packfields: variable %s not defined", fld_name.c_str ());
+                  return octave_value ();
+               }
             }
           else
-            error ("packfields: invalid field name: %s", fld_name.c_str ());
+            {
+              error ("packfields: invalid field name: %s", fld_name.c_str ());
+              return octave_value ();
+            }
         }
 
-      if (! error_state)
-        {
 #ifdef DEFMETHOD_DLD
 #ifdef OCTAVE_HAVE_INTERPRETER_VARVAL
-          octave_value struct_val = interp.varval (struct_name);
+      octave_value struct_val = interp.varval (struct_name);
 #else
-          octave_value struct_val = curr_scope.varval (struct_name);
+      octave_value struct_val = curr_scope.varval (struct_name);
 #endif
 #else
-          octave_value struct_val = symbol_table::varval (struct_name);
+      octave_value struct_val = symbol_table::varval (struct_name);
 #endif
-          octave_scalar_map map;
+      octave_scalar_map map;
 
-          if (struct_val.is_defined () && struct_val.OV_ISMAP ())
-            map = struct_val.scalar_map_value ();
+      if (struct_val.is_defined () && struct_val.OV_ISMAP ())
+        map = struct_val.scalar_map_value ();
 
-          for (octave_idx_type i = 0; i < nargin-1; i++)
-            map.assign (fld_names(i), fld_vals(i));
+      for (octave_idx_type i = 0; i < nargin-1; i++)
+        map.assign (fld_names(i), fld_vals(i));
 
-          struct_val = map;
+      struct_val = map;
 
 #ifdef DEFMETHOD_DLD
 #ifdef OCTAVE_HAVE_INTERPRETER_ASSIGN
-          interp.assign (struct_name, struct_val);
+      interp.assign (struct_name, struct_val);
 #else
-          curr_scope.assign (struct_name, struct_val);
+      curr_scope.assign (struct_name, struct_val);
 #endif
 #else
-          symbol_table::assign (struct_name, struct_val);
+      symbol_table::assign (struct_name, struct_val);
 #endif
-        }
     }
   else
     print_usage ();

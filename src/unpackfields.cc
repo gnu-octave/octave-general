@@ -37,7 +37,7 @@ DEFUN_DLD (unpackfields, args, ,
 Create variables from fields of a struct.\n\
 \n\
 Inserts the named fields @var{fld1}, @var{fld2}, @dots{}, from the struct\n\
-named @var{s_name}, into the current scope.  Noe that @var{s_name} is the\n\
+named @var{s_name}, into the current scope.  Note that @var{s_name} is the\n\
 name of the struct in the current scope, not the struct itself.\n\
 \n\
 @example\n\
@@ -69,96 +69,105 @@ but more efficient and more concise.\n\
        = interp.require_current_scope ("unpackfields");
 #endif
 #endif
-
+      if (! args (0).is_string ())
+        {
+            error ("unpackfields: expected variable name");
+	    return octave_value ();
+        }
+ 
       std::string struct_name = args (0).string_value ();
       string_vector fld_names(nargin-1);
 
-      if (! error_state && ! OCTAVE__VALID_IDENTIFIER (struct_name))
-        error ("unpackfields: invalid variable name: %s", struct_name.c_str ());
+      if (! OCTAVE__VALID_IDENTIFIER (struct_name))
+        {
+          error ("unpackfields: invalid variable name: %s",
+                 struct_name.c_str ());
+	    return octave_value ();
+        }
 
       for (octave_idx_type i = 0; i < nargin-1; i++)
         {
-          if (error_state)
-            break;
+          if (! args (i+1).is_string ())
+            {
+              error ("unpackfields: expected variable name for input %d", (int)i+1);
+	      return octave_value ();
+            }
 
           std::string fld_name = args(i+1).string_value ();
-
-          if (error_state)
-            break;
 
           if (OCTAVE__VALID_IDENTIFIER (fld_name))
             fld_names(i) = fld_name;
           else
-            error ("unpackfields: invalid field name: %s", fld_name.c_str ());
+            {
+              error ("unpackfields: invalid field name: %s", fld_name.c_str ());
+              return octave_value ();
+            }
         }
 
-      if (! error_state)
-        {
-          // Force the symbol to be inserted in caller's scope.
+      // Force the symbol to be inserted in caller's scope.
 #ifdef DEFMETHOD_DLD
 #ifdef OCTAVE_HAVE_INTERPRETER_VARVAL
-          octave_value struct_val = interp.varval (struct_name);
+      octave_value struct_val = interp.varval (struct_name);
 #else
-          octave_value struct_val = curr_scope.varval (struct_name);
+      octave_value struct_val = curr_scope.varval (struct_name);
 #endif
 #else
-          octave_value struct_val = symbol_table::varval (struct_name);
+      octave_value struct_val = symbol_table::varval (struct_name);
 #endif
-          if (struct_val.OV_ISMAP ())
+      if (struct_val.OV_ISMAP ())
+        {
+	  if (struct_val.ndims () == 2)
             {
               // Fast code for a built-in struct.
               const octave_scalar_map map = struct_val.scalar_map_value ();
 
-              if (! error_state)
-                {
-                  // Do the actual work.
-                  for (octave_idx_type i = 0; i < nargin-1; i++)
-                    {
-                      octave_scalar_map::const_iterator iter = map.seek (fld_names(i));
-                      if (iter != map.end ())
-#ifdef DEFMETHOD_DLD
-#ifdef OCTAVE_HAVE_INTERPRETER_ASSIGN
-                        interp.assign (fld_names(i), map.contents (iter));
-#else
-                        curr_scope.assign (fld_names(i), map.contents (iter));
-#endif
-#else
-                        symbol_table::assign (fld_names(i), map.contents (iter));
-#endif
-                      else
-                        {
-                          error ("unpackfields: field %s does not exist", fld_names(i).c_str ());
-                          break;
-                        }
-                    }
-                }
-              else
-                error ("unpackfields: structure must have singleton dimensions");
-            }
-          else if (struct_val.is_defined ())
-            {
-              // General case.
-              std::list<octave_value_list> idx (1);
-
+              // Do the actual work.
               for (octave_idx_type i = 0; i < nargin-1; i++)
                 {
-                  idx.front () = args(i+1); // Save one string->octave_value conversion.
-                  octave_value val = struct_val.subsref (".", idx);
-
-                  if (error_state)
-                    break;
-
-                  if (val.is_defined ())
+                  octave_scalar_map::const_iterator iter = map.seek (fld_names(i));
+                  if (iter != map.end ())
 #ifdef DEFMETHOD_DLD
 #ifdef OCTAVE_HAVE_INTERPRETER_ASSIGN
-                    interp.assign (fld_names(i), val);
+                    interp.assign (fld_names(i), map.contents (iter));
 #else
-                    curr_scope.assign (fld_names(i), val);
+                    curr_scope.assign (fld_names(i), map.contents (iter));
 #endif
 #else
-                    symbol_table::assign (fld_names(i), val);
+                    symbol_table::assign (fld_names(i), map.contents (iter));
 #endif
+                  else
+                    {
+                      error ("unpackfields: field %s does not exist", fld_names(i).c_str ());
+                      break;
+                    }
                 }
+            }
+          else
+            {
+              error ("unpackfields: structure must have singleton dimensions");
+              return octave_value ();
+            }
+        }
+      else if (struct_val.is_defined ())
+        {
+          // General case.
+          std::list<octave_value_list> idx (1);
+
+          for (octave_idx_type i = 0; i < nargin-1; i++)
+            {
+              idx.front () = args(i+1); // Save one string->octave_value conversion.
+              octave_value val = struct_val.subsref (".", idx);
+
+              if (val.is_defined ())
+#ifdef DEFMETHOD_DLD
+#ifdef OCTAVE_HAVE_INTERPRETER_ASSIGN
+                interp.assign (fld_names(i), val);
+#else
+                curr_scope.assign (fld_names(i), val);
+#endif
+#else
+                symbol_table::assign (fld_names(i), val);
+#endif
             }
         }
     }
