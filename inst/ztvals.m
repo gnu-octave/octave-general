@@ -42,3 +42,7 @@ function x = ztvals (x, tol)
   endif
 
 endfunction
+
+%!assert(ztvals([1 0.4 -0.4 -1], 0.5), [1 0 0 -1]) 
+%!assert(ztvals(double([1e-11 1e-6 1])), [0 1e-6 1]) 
+%!assert(ztvals(single([1e-11 1e-6 1])), single([0 0 1])) 
