@@ -1,4 +1,4 @@
-// Copyright (C) 2002 Andy Adler
+// Copyright (C) 2002-2019 Andy Adler
 //
 // This program is free software; you can redistribute it and/or modify it under
 // the terms of the GNU General Public License as published by the Free Software
@@ -16,7 +16,20 @@
 #include <octave/oct.h>
 #include <octave/file-io.h>
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#ifdef HAVE_OCTAVE_INTERPRETER_H
+# include <octave/interpreter.h>
+#endif
+
+
+#ifdef DEFMETHOD_DLD
+DEFMETHOD_DLD (mark_for_deletion, interp, args, ,
+#else
 DEFUN_DLD (mark_for_deletion, args,,
+#endif
 "mark_for_deletion ( filename1, filename2, ... );\n\
 put filenames in the list of files to be deleted\n\
 when octave terminates.\n\
@@ -28,8 +41,22 @@ This is useful for any function which uses temprorary files.")
       error ("mark_for_deletion: arguments must be string filenames");
       return retval;
     } else {
+
+#ifdef OCTAVE_HAVE_INTERPRETER_MARK_FOR_DELETION
+      interp.mark_for_deletion( args(i).string_value() );
+#else
       mark_for_deletion( args(i).string_value() );
+#endif
     }
   }
   return retval;
 }
+
+#if 0
+%!test
+%! testname = tempname;
+%! mark_for_deletion(testname);
+%! mark_for_deletion(testname, testname);
+
+%!error <arguments must be string filenames> mark_for_deletion(1)
+#endif

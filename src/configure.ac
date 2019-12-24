@@ -78,6 +78,12 @@ LIBS="-loctinterp $LIBS"
 # CXXFLAGS=
 CPPFLAGS="$OCTINCLUDEDIR $CPPFLAGS"
 
+AC_CHECK_HEADERS([octave/interpreter.h],
+  [],
+  [],
+  [#include <octave/oct.h>]
+)
+
 ## Simple symbol alternatives of different Octave versions.
 OF_OCTAVE_LIST_ALT_SYMS([
 
@@ -102,12 +108,6 @@ OF_OCTAVE_LIST_ALT_SYMS([
 ],
    [oct-alt-includes.h])
 
-AC_CHECK_HEADERS([octave/interpreter.h],
-  [],
-  [],
-  [#include <octave/oct.h>]
-)
-
 OF_OCTAVE_CHECK_SYM(
   [interpreter::varval],
   [[octave::interpreter *interp; interp->varval ("varname");]],
@@ -119,6 +119,13 @@ OF_OCTAVE_CHECK_SYM(
   [interpreter::assign],
   [[octave::interpreter *interp; interp->assign ("varname", octave_value ());]],
   [OCTAVE_HAVE_INTERPRETER_ASSIGN],
+  [[#include <octave/interpreter.h>]]
+)
+
+OF_OCTAVE_CHECK_SYM(
+  [interpreter::mark_for_deletion],
+  [[octave::interpreter *interp; interp->mark_for_deletion ("varname");]],
+  [OCTAVE_HAVE_INTERPRETER_MARK_FOR_DELETION],
   [[#include <octave/interpreter.h>]]
 )
 

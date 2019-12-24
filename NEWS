@@ -4,6 +4,8 @@ Summary of important user-visible changes for general 2.1.0+:
  ** updated configure script to detect function names for various
     octave versions.
 
+ ** added additional BIST tests
+
 Summary of important user-visible changes for general 2.1.0:
 -------------------------------------------------------------------
 
