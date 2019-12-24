@@ -1,5 +1,6 @@
 ## Copyright (C) 2011 Fernando Damian Nieuwveldt <fdnieuwveldt@gmail.com>
 ## 2012 Adapted by Juan Pablo Carbajal <carbajal@ifi.uzh.ch>
+## 2019 Modifications by John Donoghue <john.donoghue@ieee.org>
 ##
 ## This program is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License
@@ -12,10 +13,11 @@
 
 ## -*- texinfo -*-
 ## @deftypefn {Function File} {} cauchy (@var{N}, @var{r}, @var{x}, @var{f} )
-## Return the Taylor coefficients and numerical differentiation of a function
-## @var{f} for the first @var{N-1} coefficients or derivatives using the fft.
-## @var{N} is the number of points to evaluate,
-## @var{r} is the radius of convergence, needs to be chosen less then the smallest singularity,
+## Return the Taylor coefficients and numerical differentiation of a function.
+##
+## @var{f} for the first @var{N-1} coefficients or derivatives using the fft.@*
+## @var{N} is the number of points to evaluate,@*
+## @var{r} is the radius of convergence, needs to be chosen less then the smallest singularity,@*
 ## @var{x} is point to evaluate the Taylor expansion or differentiation. For example,
 ##
 ## If @var{x} is a scalar, the function @var{f} is evaluated in a row vector
@@ -30,29 +32,29 @@
 ## @end example
 ## @end deftypefn
 
-function deriv = cauchy(N, r, x, f)
+function deriv = cauchy (N, r, x, f)
 
   if nargin != 4
     print_usage ();
-  end
+  endif
 
   [nx m]   = size (x);
   if m > 1
-    error('cauchy:InvalidArgument', 'The 3rd argument must be a column vector');
-  end
+    error ('cauchy:InvalidArgument', 'The 3rd argument must be a column vector');
+  endif
 
   n        = 0:N-1;
   th       = 2*pi*n/N;
 
   f_p = f (bsxfun (@plus, x, r * exp (i * th) ) );
 
-  evalfft  = real(fft (f_p, [], 2));
+  evalfft  = real (fft (f_p, [], 2));
 
   deriv    = bsxfun (@times, evalfft, 1./(N*(r.^n)).* factorial(n)) ;
 
 endfunction
 
-function g = hermite(order,x)
+function g = hermite (order,x)
    ## N should be bigger than order+1
    N      = 32;
    r      = 0.5;
