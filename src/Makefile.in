@@ -1,4 +1,5 @@
 MKOCTFILE := @MKOCTFILE@
+OCTAVE_CONFIG := @OCTAVE_CONFIG@
 CXXFLAGS  := @CXXFLAGS@ @DEFS@
 LIBS      := @LIBS@
 LDFLAGS   := @LDFLAGS@
@@ -6,12 +7,14 @@ GREP      := @GREP@
 NETTLE_CFLAGS := @NETTLE_CFLAGS@
 NETTLE_LIBS := @NETTLE_LIBS@
 
+ARCHDIR   := "$(shell $(OCTAVE_CONFIG) -p CANONICAL_HOST_TYPE)-$(shell $(OCTAVE_CONFIG) -p API_VERSION)"
+
 ifndef MKOCTFILE
 MKOCTFILE := mkoctfile -Wall
 endif
 
 PROGS = $(patsubst %.cc,%.oct,$(wildcard *.cc))
-TST_DIR    := ../inst/test
+TST_DIR    := ../inst/$(ARCHDIR)
 CC_SOURCES  := $(wildcard *.cc)
 CC_TST_SOURCES := $(shell $(GREP) --files-with-matches '^%!' $(CC_SOURCES))
 TST_SOURCES := $(patsubst %.cc,${TST_DIR}/%.cc-tst,$(CC_TST_SOURCES))
@@ -35,3 +38,9 @@ $(TST_SOURCES): $(TST_DIR)/%.cc-tst: %.cc | $(TST_DIR)
 
 clean:
 	rm -f *.o octave-core core *.oct *~
+	test -e $(TST_DIR) && rm -f $(TST_SOURCES) || true
+	test -e $(TST_DIR) && rmdir $(TST_DIR) || true
+
+distclean: clean
+	rm -rf autom4te.cache
+	rm -f Makefile config.status config.log config.h configure
