@@ -43,6 +43,7 @@ AC_MSG_ERROR([AWK not found], 1);
 fi
 
 AC_PROG_GREP
+AC_PROG_SED
 
 # The same value of CXX as Octave was compiled with is supposed to be used.
 CXX=${CXX:-`${MKOCTFILE} -p CXX`}
@@ -134,7 +135,16 @@ LDFLAGS=$TLDFLAGS
 CXXFLAGS=$TCXXFLAGS
 CPPFLAGS=$TCPPFLAGS
 AC_LANG_POP([C++])
+
 # End of checks for Octave features.
+octave_major_ver=`$OCTAVE_CONFIG -p VERSION | $SED -e "s/\..*$//"`
+if test -z "$octave_major_ver"; then
+  octave_major_ver=4
+fi
+if test $octave_major_ver -lt 6; then
+  ENABLE_SRC_BISTS=1
+  AC_SUBST(ENABLE_SRC_BISTS)
+fi
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

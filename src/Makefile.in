@@ -20,7 +20,12 @@ CC_TST_SOURCES := $(shell $(GREP) --files-with-matches '^%!' $(CC_SOURCES))
 TST_SOURCES := $(patsubst %.cc,${TST_DIR}/%.cc-tst,$(CC_TST_SOURCES))
 
 
-all: $(PROGS) $(TST_SOURCES)
+ifeq ("@ENABLE_SRC_BISTS@","1")
+  PROGS += tests
+endif
+
+.PHONY: all
+all: $(PROGS)
 
 SHA1.oct: SHA1.cc
 	$(MKOCTFILE) $< $(CXXFLAGS) $(NETTLE_CFLAGS) $(LDFLAGS) $(LIBS) $(NETTLE_LIBS)
@@ -30,17 +35,22 @@ SHA1.oct: SHA1.cc
 $(TST_DIR):
 	@mkdir -p "$@"
 
-$(TST_SOURCES): $(TST_DIR)/%.cc-tst: %.cc | $(TST_DIR)
+.PHONY: tests
+tests: $(TST_SOURCES)
+
+$(TST_DIR)/%.cc-tst: %.cc | $(TST_DIR)
 	@echo "Extracting tests from $< ..."
 	@$(RM) -f "$@" "$@-t"
 	@(      echo "## Generated from $<"; \
 	$(GREP) '^%!' "$<") > "$@"
 
+.PHONY: clean
 clean:
 	rm -f *.o octave-core core *.oct *~
 	test -e $(TST_DIR) && rm -f $(TST_SOURCES) || true
 	test -e $(TST_DIR) && rmdir $(TST_DIR) || true
 
+.PHONY: distclean
 distclean: clean
 	rm -rf autom4te.cache
 	rm -f Makefile config.status config.log config.h configure
