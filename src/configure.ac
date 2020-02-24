@@ -141,7 +141,7 @@ octave_major_ver=`$OCTAVE_CONFIG -p VERSION | $SED -e "s/\..*$//"`
 if test -z "$octave_major_ver"; then
   octave_major_ver=4
 fi
-if test $octave_major_ver -lt 6; then
+if test $octave_major_ver -gt 3; then
   ENABLE_SRC_BISTS=1
   AC_SUBST(ENABLE_SRC_BISTS)
 fi
