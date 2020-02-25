@@ -2,6 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 #
 ### Copyright (C) 2015-2017 Olaf Till <i7tiol@t-online.de>
+### Copyright (C) 2018-2020 John DOnoghue <john.donoghue@ieee.org>
 ###
 ### This program is free software; you can redistribute it and/or
 ### modify it under the terms of the GNU General Public License as
@@ -18,7 +19,7 @@
 ### <http://www.gnu.org/licenses/>.
 
 AC_PREREQ([2.67])
-AC_INIT([general], [2.1.0])
+AC_INIT([general], [2.1.1])
 AC_CONFIG_SRCDIR([packfields.cc])
 AC_CONFIG_HEADERS([config.h])
 
