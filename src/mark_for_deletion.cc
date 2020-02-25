@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2019 Andy Adler
+// Copyright (C) 2002-2020 Andy Adler
 //
 // This program is free software; you can redistribute it and/or modify it under
 // the terms of the GNU General Public License as published by the Free Software
@@ -30,10 +30,13 @@ DEFMETHOD_DLD (mark_for_deletion, interp, args, ,
 #else
 DEFUN_DLD (mark_for_deletion, args,,
 #endif
-"mark_for_deletion ( filename1, filename2, ... );\n\
-put filenames in the list of files to be deleted\n\
+"-*- texinfo -*-\n \
+@deftypefn {Loadable Function} mark_for_deletion (@var{filename}, ...);\n\
+Put filenames in the list of files to be deleted\n\
 when octave terminates.\n\
-This is useful for any function which uses temprorary files.")
+\n \
+This is useful for any function which uses temprorary files.\n \
+@end deftypefn")
 {
   octave_value retval;
   for ( int i=0; i< args.length(); i++) {

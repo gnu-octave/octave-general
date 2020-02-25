@@ -1,5 +1,5 @@
 // Copyright (C) 1999 Andy Adler <adler@sce.carleton.ca>
-// Copyright (C) 2018 John Donoghue <john.donogue@ieee.org>
+// Copyright (C) 2018-2020 John Donoghue <john.donogue@ieee.org>
 //
 // This program is free software; you can redistribute it and/or modify it under
 // the terms of the GNU General Public License as published by the Free Software
@@ -29,20 +29,23 @@
 
 
 DEFUN_DLD (SHA1, args, ,
-  "hash = SHA1 (...)\n\
+  "-*- texinfo -*-\n\
+@deftypefn {Loadable Function} @var{hash} = SHA1(@var{byte_stream}\n\
+@deftypefnx {Loadable Function} @var{hash} = SHA1(@var{byte_stream}, @var{hash_initial})\n\
+\n\
 SHA1 implements the Secure Hash Algorithm Cryptographic\n\
 Hashing (One-Way) function.  (FIPS PUB 180-1)\n\
 \n\
-hash= SHA1( byte_stream, hash_initial )\n\
-hash = Row Vector of  20 byte values;\n\
+@var{hash} is a Row Vector of 20 byte values\n\
 \n\
-hash_initial default is 67452301 EFCDAB89 98BADCFE 10325476 C3D2E1F0\n\
+@var{hash_initial} default is 67452301 EFCDAB89 98BADCFE 10325476 C3D2E1F0\n\
 \n\
 Note: while it is possible to create a \"poor-man's\" MAC (message\n\
 authenticity code) by setting hash_initial to a private value,\n\
 it is better to use an algorithm like HMAC.\n\
 \n\
-HMAC= SHA1( [ passcode, SHA1( [passcode, data ] ) ); ")
+HMAC = SHA1( [ passcode, SHA1( [passcode, data ] ) );\n \
+@end deftypefn")
 {
 #ifndef HAVE_NETTLE
   error ("SHA1: Your system doesn't support or wasnt compiled with the SHA1 interface");
