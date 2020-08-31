@@ -35,7 +35,7 @@ DEFUN_DLD (mark_for_deletion, args,,
 Put filenames in the list of files to be deleted\n\
 when octave terminates.\n\
 \n \
-This is useful for any function which uses temprorary files.\n \
+This is useful for any function which uses temporary files.\n \
 @end deftypefn")
 {
   octave_value retval;
