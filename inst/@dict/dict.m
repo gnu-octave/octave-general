@@ -26,12 +26,11 @@
 ##
 ## @example
 ## @group
-## s = struct ("7", "value7", "  ", "just spaces");
+## s = struct ("7", "value 7", "  ", "just spaces");
 ## s.("7")
-##   @result{} "value 7"
+##   @result{} ans = value 7
 ## s.("  ")
-## @result{} just spaces
-##   @result{} "just spaces"
+##   @result{} ans = just spaces
 ## @end group
 ## @end example
 ##

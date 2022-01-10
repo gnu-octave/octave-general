@@ -27,7 +27,7 @@
 ## @example
 ## @group
 ## d = cauchy(16, 1.5, 0, @@(x) exp(x));
-## @result{} d(2) = 1.0000 # first (2-1) derivative of function f (index starts from zero)
+## d(2) = 1.0000 # first (2-1) derivative of function f (index starts from zero)
 ## @end group
 ## @end example
 ## @end deftypefn

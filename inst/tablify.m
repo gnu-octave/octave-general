@@ -32,17 +32,29 @@
 ## @example 
 ## @group
 ## [a, b] = tablify ([1 2; 3 4], 5) 
-## @result{} a = [ 1, 2; 3, 4 ] 
-## @result{} b = [ 5, 5; 5, 5 ] 
+## @result{} a = 
+##   1 2
+##   3 4
+## @result{} b = 
+##   5 5
+##   5 5 
 ## @end group 
 ## @end example
 ## @example 
 ## @group
 ## [a, b, c] = tablify (1, [1 2 3 4], [5;6;7]) 
-## @result{}
-## b = [ 1 1 1 1; 1 1 1 1; 1 1 1 1] 
-## @result{} b = [ 1 2 3 4; 1 2 3 4; 1 2 3 4] 
-## @result{} c = [ 5 5 5 5; 6 6 6 6; 7 7 7 7 ] 
+## @result{} a =
+##   1 1 1 1
+##   1 1 1 1
+##   1 1 1 1
+## @result{} b =
+##   1 2 3 4
+##   1 2 3 4
+##   1 2 3 4
+## @result{} c = 
+##   5 5 5 5
+##   6 6 6 6
+##   7 7 7 7
 ## @end group 
 ## @end example
 ##
