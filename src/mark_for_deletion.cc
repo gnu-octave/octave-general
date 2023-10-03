@@ -14,10 +14,13 @@
 // this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <octave/oct.h>
-#include <octave/file-io.h>
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
+#endif
+
+#ifndef OCTAVE_HAVE_INTERPRETER_MARK_FOR_DELETION
+# include <octave/file-io.h>
 #endif
 
 #ifdef HAVE_OCTAVE_INTERPRETER_H
