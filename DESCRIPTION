@@ -8,4 +8,6 @@ Description: General tools for Octave.
 Depends: octave (>= 4.0.0)
 BuildRequire: nettle-devel
 License: GPLv3+, modified BSD, public domain
-Url: http://octave.sf.net
+Url: https://octave.sourceforge.io/general/overview.html
+Repository: https://sourceforge.net/p/octave/general/ci/default/tree/
+Tracker: https://savannah.gnu.org/bugs/?group=octave
