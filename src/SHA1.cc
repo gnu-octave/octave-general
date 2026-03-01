@@ -24,6 +24,7 @@
 #endif
 
 #ifdef HAVE_NETTLE
+  #include <nettle/version.h>
   #include <nettle/sha1.h>
 #endif
 
@@ -85,7 +86,11 @@ HMAC = SHA1( [ passcode, SHA1( [passcode, data ] ) );\n \
       sha1_update( &ctx, 1, &d);
    }
 
+#if NETTLE_VERSION_MAJOR >= 4
+   sha1_digest (&ctx, digest);
+#else
    sha1_digest(&ctx, SHA1_DIGEST_SIZE, digest);
+#endif
 
    RowVector hash(SHA1_DIGEST_SIZE);
    for ( int i=0; i<SHA1_DIGEST_SIZE; i++) {
