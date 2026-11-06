@@ -59,6 +59,7 @@ REPO_TIMESTAMP := $(firstword $(shell $(call HG_CMD,log) --rev $(HG_ID) --templa
 endif
 ifeq ($(vcs),git)
 release_dir_dep := .git/index
+GIT          := git
 REPO_TIMESTAMP := $(firstword $(shell $(GIT) log -n1 --date=unix --format="%ad"))
 endif
 
