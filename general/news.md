@@ -3,7 +3,7 @@ layout: "default"
 permalink: "/news/"
 title: "General Toolkit - News"
 pkg_name: "general"
-version: "2.1.4"
+version: "2.1.5"
 description: "General tools for Octave."
 navigation:
 - id: "overview"
@@ -16,6 +16,11 @@ navigation:
   name: "News"
 ---
 <pre>
+Summary of important user-visible changes for general 2.1.5:
+-------------------------------------------------------------------
+
+ ** updates to bulld for cxx11 changes in gcc16+
+
 Summary of important user-visible changes for general 2.1.4:
 -------------------------------------------------------------------
 

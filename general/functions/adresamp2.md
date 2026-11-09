@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/9_adresamp2/"
 pkg_name: "general"
-pkg_version: "2.1.4"
+pkg_version: "2.1.5"
 pkg_description: "General tools for Octave."
 title: "General Toolkit - adresamp2"
 category: "Various Functions"

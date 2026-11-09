@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/9_unresamp2/"
 pkg_name: "general"
-pkg_version: "2.1.4"
+pkg_version: "2.1.5"
 pkg_description: "General tools for Octave."
 title: "General Toolkit - unresamp2"
 category: "Various Functions"

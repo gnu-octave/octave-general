@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/@dict/13_dictdisplay/"
 pkg_name: "general"
-pkg_version: "2.1.4"
+pkg_version: "2.1.5"
 pkg_description: "General tools for Octave."
 title: "General Toolkit - @dict/display"
 category: "Various Functions"

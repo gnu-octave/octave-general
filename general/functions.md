@@ -3,7 +3,7 @@ layout: "function_list"
 permalink: "/functions/"
 title: "General Toolkit - Functions"
 pkg_name: "general"
-version: "2.1.4"
+version: "2.1.5"
 description: "General tools for Octave."
 categories:
 - id: "12_Dictionaries"

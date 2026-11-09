@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/8_safeprod/"
 pkg_name: "general"
-pkg_version: "2.1.4"
+pkg_version: "2.1.5"
 pkg_description: "General tools for Octave."
 title: "General Toolkit - safeprod"
 category: "Various Functions"

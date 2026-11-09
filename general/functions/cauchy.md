@@ -2,7 +2,7 @@
 layout: "default"
 permalink: "/functions/6_cauchy/"
 pkg_name: "general"
-pkg_version: "2.1.4"
+pkg_version: "2.1.5"
 pkg_description: "General tools for Octave."
 title: "General Toolkit - cauchy"
 category: "Various Functions"
