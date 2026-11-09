@@ -1,16 +1,5 @@
 general >> General purpose functions
-Dictionaries
- @dict/dict
- @dict/display
- @dict/get
- @dict/has
- @dict/isempty
- @dict/join
- @dict/length
- @dict/struct
- @dict/subsasgn
- @dict/subsref
-Various Functions
+ dict = struct in octave core
  adresamp2
  cauchy
  majle
